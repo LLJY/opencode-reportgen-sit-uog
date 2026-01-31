@@ -299,7 +299,7 @@ export const DocsPlugin: Plugin = async (ctx) => {
           
           // School report specific variables
           if (args.logo) {
-            const assetsDir = resolver.getUserConfigDir() + "/pandoc/assets";
+            const assetsDir = resolver.getUserConfigDir() + "/assets";
             if (args.logo === "sit") {
               builder.variable("logo-mode", "single").variable("sit-logo", `${assetsDir}/sit-logo.png`);
             } else if (args.logo === "uofg") {
@@ -608,7 +608,9 @@ export const DocsPlugin: Plugin = async (ctx) => {
           const builder = pandoc().input(args.input_path).output(outputPath).applyPreset(preset)
             .applyMetadata({ title: args.title, author: args.author, abstract: args.abstract, keywords: args.keywords });
           if (args.bibliography) builder.bibliography(args.bibliography);
-          const result = await builder.execute();
+          // Run from template directory so LaTeX can find IEEEtran.cls
+          const templateDir = preset.resolved_template_path.split("/").slice(0, -1).join("/");
+          const result = await builder.execute(templateDir);
           if (!result.success) throw new Error(`Failed:\n${result.error}`);
           return `Created IEEE ${args.format || "conference"} paper: ${outputPath}`;
         },
@@ -663,7 +665,7 @@ export const DocsPlugin: Plugin = async (ctx) => {
 
           // Logos - resolve paths from assets
           if (args.logo) {
-            const assetsDir = resolver.getUserConfigDir() + "/pandoc/assets";
+            const assetsDir = resolver.getUserConfigDir() + "/assets";
             if (args.logo === "sit") {
               builder.variable("logo-mode", "single");
               builder.variable("sit-logo", `${assetsDir}/sit-logo.png`);

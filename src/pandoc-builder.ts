@@ -293,12 +293,13 @@ export class PandocBuilder {
   /**
    * Execute the pandoc command
    */
-  async execute(): Promise<{ success: boolean; output?: string; error?: string }> {
+  async execute(cwd?: string): Promise<{ success: boolean; output?: string; error?: string }> {
     const cmd = this.build();
 
     const proc = Bun.spawn(cmd, {
       stdout: "pipe",
       stderr: "pipe",
+      cwd,
     });
 
     await proc.exited;
