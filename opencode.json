@@ -10,6 +10,7 @@
       "description": "Strategic planning agent. Analyzes requirements and creates implementation plans.",
       "mode": "primary",
       "model": "anthropic/claude-opus-4-5",
+      "variant": "max",
       "temperature": 1.0,
       "tools": {
         "read": true,
@@ -24,15 +25,17 @@
       "description": "Primary builder agent. Executes implementation with best practices.",
       "mode": "primary",
       "model": "anthropic/claude-opus-4-5",
+      "variant": "max",
       "prompt": "{file:prompts/builder-prompt.md}",
       "temperature": 1.0
     },
     "explore": {
       "description": "Fast file system navigator. Locates files, logs, configs, or code relevant to tasks.",
       "mode": "subagent",
-      "model": "google/gemini-3-flash",
+      "model": "kimi-for-coding/k2p5",
+      "variant": "max",
       "prompt": "{file:agents/explore.md}",
-      "temperature": 0.3,
+      "temperature": 1.0,
       "tools": {
         "bash": true,
         "read": true,
@@ -46,9 +49,10 @@
     "docs-first-coder": {
       "description": "Documentation-first coding expert. Verifies APIs against current docs before implementation.",
       "mode": "subagent",
-      "model": "anthropic/claude-opus-4-5",
+      "model": "kimi-for-coding/k2p5",
+      "variant": "max",
       "prompt": "{file:agents/docs-first-coder.md}",
-      "temperature": 0.3,
+      "temperature": 1.0,
       "tools": {
         "read": true,
         "write": true,
@@ -63,9 +67,10 @@
     "code-checker": {
       "description": "Code verification specialist. Three-pillar analysis: smells, spec alignment, correctness.",
       "mode": "subagent",
-      "model": "google/gemini-3-flash",
+      "model": "kimi-for-coding/k2p5",
+      "variant": "max",
       "prompt": "{file:agents/code-checker.md}",
-      "temperature": 0.3,
+      "temperature": 1.0,
       "tools": {
         "read": true,
         "glob": true,
@@ -80,9 +85,10 @@
     "esp32-tdd-coder": {
       "description": "ESP32 embedded systems coder following TDD principles. Refuses code without tests unless overridden.",
       "mode": "subagent",
-      "model": "anthropic/claude-opus-4-5",
+      "model": "kimi-for-coding/k2p5",
+      "variant": "max",
       "prompt": "{file:agents/esp32-tdd-coder.md}",
-      "temperature": 0.2,
+      "temperature": 1.0,
       "tools": {
         "read": true,
         "write": true,
@@ -97,9 +103,10 @@
     "esp32-tdd-test-writer": {
       "description": "ESP32 TDD test writer. Generates unit tests from technical design docs. Rejects sparse docs.",
       "mode": "subagent",
-      "model": "z-ai/glm-4.7",
+      "model": "kimi-for-coding/k2p5",
+      "variant": "max",
       "prompt": "{file:agents/esp32-tdd-test-writer.md}",
-      "temperature": 0.2,
+      "temperature": 1.0,
       "tools": {
         "read": true,
         "write": true,
@@ -114,9 +121,10 @@
     "document-writer": {
       "description": "Creates professional documents, academic papers, and reports using pandoc.",
       "mode": "subagent",
-      "model": "moonshot/kimi-k2-thinking",
+      "model": "kimi-for-coding/k2p5",
+      "variant": "max",
       "prompt": "{file:agents/document-writer.md}",
-      "temperature": 0.4,
+      "temperature": 1.0,
       "tools": {
         "read": true,
         "write": true,
