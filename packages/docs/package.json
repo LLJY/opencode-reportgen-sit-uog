@@ -1,0 +1,16 @@
+{
+  "name": "@rice-opencode/docs",
+  "version": "1.0.0",
+  "description": "Document generation plugin for OpenCode",
+  "main": "src/plugin.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src/**/*.ts"
+  },
+  "dependencies": {
+    "yaml": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": "*"
+  }
+}

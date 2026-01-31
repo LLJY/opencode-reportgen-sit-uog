@@ -1,7 +1,7 @@
 import { type Plugin, tool } from "@opencode-ai/plugin";
-import { TemplateResolver } from "../src/template-resolver";
-import { PresetManager } from "../src/preset-manager";
-import { pandoc, computeOutputPath } from "../src/pandoc-builder";
+import { TemplateResolver } from "./templates";
+import { PresetManager } from "./presets";
+import { pandoc, computeOutputPath } from "./builder";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from "fs";
 import { join, dirname } from "path";
 

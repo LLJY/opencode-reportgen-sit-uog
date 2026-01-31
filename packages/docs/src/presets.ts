@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "fs";
 import { parse as parseYaml } from "yaml";
-import { TemplateResolver } from "./template-resolver";
+import { TemplateResolver } from "./templates";
 
 /**
  * Preset configuration schema

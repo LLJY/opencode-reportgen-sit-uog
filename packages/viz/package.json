@@ -1,0 +1,13 @@
+{
+  "name": "@rice-opencode/viz",
+  "version": "1.0.0",
+  "description": "Visualization generator plugin for charts, diagrams, and figures",
+  "main": "src/plugin.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src/**/*.ts"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": "*"
+  }
+}

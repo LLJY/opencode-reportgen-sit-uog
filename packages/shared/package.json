@@ -1,0 +1,9 @@
+{
+  "name": "@rice-opencode/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities for rice-opencode packages",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  }
+}

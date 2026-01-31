@@ -1,4 +1,4 @@
-import { ResolvedPreset } from "./preset-manager";
+import { ResolvedPreset } from "./presets";
 
 /**
  * Fluent builder for pandoc commands
