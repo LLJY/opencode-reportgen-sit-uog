@@ -1,47 +1,32 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "plugin": [
-    "opencode-antigravity-auth@1.3.0",
-    "opencode-anthropic-auth",
+    "opencode-antigravity-auth@latest",
+    "opencode-anthropic-auth@latest",
     "@mohak34/opencode-notifier@latest"
   ],
-  "mcp": {
-    "github": {
-      "type": "remote",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer {env:GITHUB_PAT}"
-      },
-      "enabled": true
-    },
-    "deepwiki": {
-      "type": "remote",
-      "url": "https://mcp.deepwiki.com/mcp",
-      "enabled": true
-    },
-    "context7": {
-      "type": "remote",
-      "url": "https://mcp.context7.com/mcp",
-      "headers": {
-        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
-      },
-      "enabled": true
-    },
-    "brave-search": {
-      "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-brave-search"],
-      "environment": {
-        "BRAVE_API_KEY": "{env:BRAVE_API_KEY}"
-      },
-      "enabled": true
-    },
-    "ddg-search": {
-      "type": "local",
-      "command": ["npx", "-y", "@oevortex/ddg_search@latest"],
-      "enabled": true
-    }
-  },
   "agent": {
+    "plan": {
+      "description": "Strategic planning agent. Analyzes requirements and creates implementation plans.",
+      "mode": "primary",
+      "model": "anthropic/claude-opus-4-5",
+      "temperature": 1.0,
+      "tools": {
+        "read": true,
+        "glob": true,
+        "grep": true,
+        "bash": true,
+        "websearch": true,
+        "webfetch": true
+      }
+    },
+    "build": {
+      "description": "Primary builder agent. Executes implementation with best practices.",
+      "mode": "primary",
+      "model": "anthropic/claude-opus-4-5",
+      "prompt": "{file:prompts/builder-prompt.md}",
+      "temperature": 1.0
+    },
     "explore": {
       "description": "Fast file system navigator. Locates files, logs, configs, or code relevant to tasks.",
       "mode": "subagent",
@@ -139,9 +124,55 @@
         "glob": true,
         "grep": true,
         "bash": true,
+        "docs_convert": true,
+        "docs_compile_latex": true,
+        "docs_presets_list": true,
+        "docs_presets_show": true,
+        "docs_templates_list": true,
+        "docs_templates_install": true,
+        "docs_create": true,
+        "docs_create_ieee_paper": true,
+        "docs_create_school_report": true,
+        "docs_create_styled_pdf": true,
         "webfetch": false,
         "websearch": false
       }
+    }
+  },
+  "mcp": {
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_PAT}"
+      },
+      "enabled": true
+    },
+    "deepwiki": {
+      "type": "remote",
+      "url": "https://mcp.deepwiki.com/mcp",
+      "enabled": true
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+      },
+      "enabled": true
+    },
+    "brave-search": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-brave-search"],
+      "environment": {
+        "BRAVE_API_KEY": "{env:BRAVE_API_KEY}"
+      },
+      "enabled": true
+    },
+    "ddg-search": {
+      "type": "local",
+      "command": ["npx", "-y", "@oevortex/ddg_search@latest"],
+      "enabled": true
     }
   }
 }
