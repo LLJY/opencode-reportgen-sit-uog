@@ -5,6 +5,11 @@ import { pandoc, computeOutputPath } from "../src/pandoc-builder";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from "fs";
 import { join, dirname } from "path";
 
+// YAML string escaping helper
+function escapeYaml(str: string): string {
+  return str.replace(/"/g, '\\"').replace(/\n/g, ' ');
+}
+
 // Human-readable ID generation (Claude-style: purple-squirrel-482)
 const ADJECTIVES = [
   "amber", "ancient", "autumn", "bold", "brave", "bright", "calm", "clever", "cool", "crimson",
@@ -101,6 +106,11 @@ function generateUniqueDocId(ctx: { worktree?: string; directory: string }): str
   return id;
 }
 
+// Validate doc_id format to prevent path traversal
+function isValidDocId(docId: string): boolean {
+  return /^[a-z]+-[a-z]+-\d+(-\d+)?$/.test(docId);
+}
+
 export const DocsPlugin: Plugin = async (ctx) => {
   const resolver = new TemplateResolver({ projectRoot: ctx.worktree || ctx.directory });
   const presetManager = new PresetManager(resolver);
@@ -134,7 +144,7 @@ export const DocsPlugin: Plugin = async (ctx) => {
           if (!content.startsWith("---")) {
             const frontmatter = [
               "---",
-              `title: "${args.title}"`,
+              `title: "${escapeYaml(args.title)}"`,
               `date: "${new Date().toISOString().split("T")[0]}"`,
               "---",
               "",
@@ -234,6 +244,10 @@ export const DocsPlugin: Plugin = async (ctx) => {
           project_topic_id: tool.schema.string().optional(),
         },
         async execute(args) {
+          if (!isValidDocId(args.doc_id)) {
+            return `Invalid document ID format: ${args.doc_id}`;
+          }
+          
           const registry = readRegistry(ctx);
           const draftInfo = registry.drafts[args.doc_id];
           
@@ -309,9 +323,9 @@ export const DocsPlugin: Plugin = async (ctx) => {
               const authorsArray = JSON.parse(args.authors) as Array<{ name: string; sit_id: string; glasgow_id: string }>;
               const yamlLines = ["authors:"];
               for (const author of authorsArray) {
-                yamlLines.push(`  - name: "${author.name}"`);
-                yamlLines.push(`    sit-id: "${author.sit_id}"`);
-                yamlLines.push(`    glasgow-id: "${author.glasgow_id}"`);
+                yamlLines.push(`  - name: "${escapeYaml(author.name)}"`);
+                yamlLines.push(`    sit-id: "${escapeYaml(author.sit_id)}"`);
+                yamlLines.push(`    glasgow-id: "${escapeYaml(author.glasgow_id)}"`);
               }
               metaFileToCleanup = join(draftDir, `authors-${Date.now()}.yaml`);
               writeFileSync(metaFileToCleanup, yamlLines.join("\n"));
@@ -326,7 +340,7 @@ export const DocsPlugin: Plugin = async (ctx) => {
           
           // Cleanup
           if (metaFileToCleanup && existsSync(metaFileToCleanup)) {
-            try { Bun.spawn(["rm", "-f", metaFileToCleanup]).exited; } catch {}
+            try { await Bun.spawn(["rm", "-f", metaFileToCleanup]).exited; } catch {}
           }
           
           if (!result.success) {
@@ -343,6 +357,10 @@ export const DocsPlugin: Plugin = async (ctx) => {
           doc_id: tool.schema.string().describe("Document ID to delete"),
         },
         async execute(args) {
+          if (!isValidDocId(args.doc_id)) {
+            return `Invalid document ID format: ${args.doc_id}`;
+          }
+          
           const registry = readRegistry(ctx);
           
           if (!registry.drafts[args.doc_id]) {
@@ -480,12 +498,20 @@ export const DocsPlugin: Plugin = async (ctx) => {
             await Bun.spawn(["rm", "-rf", tmpDir]).exited;
             await Bun.spawn(["mkdir", "-p", tmpDir]).exited;
 
-            // Download and extract
-            const proc = Bun.spawn(["sh", "-c", `curl -sL "${tarUrl}" | tar -xz -C "${tmpDir}"`], { stdout: "pipe", stderr: "pipe" });
-            await proc.exited;
-            if (proc.exitCode !== 0) {
-              const stderr = await new Response(proc.stderr).text();
+            // Download
+            const dlProc = Bun.spawn(["curl", "-sL", "-o", `${tmpDir}/template.tar.gz`, tarUrl], { stdout: "pipe", stderr: "pipe" });
+            await dlProc.exited;
+            if (dlProc.exitCode !== 0) {
+              const stderr = await new Response(dlProc.stderr).text();
               throw new Error(`Download failed: ${stderr}`);
+            }
+
+            // Extract
+            const tarProc = Bun.spawn(["tar", "-xz", "-C", tmpDir, "-f", `${tmpDir}/template.tar.gz`], { stdout: "pipe", stderr: "pipe" });
+            await tarProc.exited;
+            if (tarProc.exitCode !== 0) {
+              const stderr = await new Response(tarProc.stderr).text();
+              throw new Error(`Extraction failed: ${stderr}`);
             }
 
             // Copy the template file
