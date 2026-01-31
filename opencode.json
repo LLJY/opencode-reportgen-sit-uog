@@ -67,7 +67,7 @@
     "code-checker": {
       "description": "Code verification specialist. Three-pillar analysis: smells, spec alignment, correctness.",
       "mode": "subagent",
-      "model": "kimi-for-coding/k2p5",
+      "model": "anthropic/claude-sonnet-4-5",
       "variant": "max",
       "prompt": "{file:agents/code-checker.md}",
       "temperature": 1.0,
