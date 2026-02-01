@@ -116,6 +116,16 @@ export class PandocBuilder {
   }
 
   /**
+   * Simplify tables for IEEE compatibility
+   * IEEEtran doesn't support complex column specifiers
+   */
+  simpleTables(): this {
+    // Use simple table format without column width calculations
+    this.args.push("--columns=1");
+    return this;
+  }
+
+  /**
    * Enable standalone mode
    */
   standalone(): this {

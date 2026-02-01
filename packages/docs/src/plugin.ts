@@ -593,7 +593,15 @@ export const DocsPlugin: Plugin = async (ctx) => {
           const builder = pandoc().input(args.input_path).output(outputPath).applyPreset(preset).listings()
             .applyMetadata({ title: args.title, author: args.author, date: args.date, subtitle: args.subtitle, abstract: args.abstract, keywords: args.keywords });
           if (args.bibliography) builder.bibliography(args.bibliography);
-          const result = await builder.execute();
+          // For IEEE templates, run from template directory so LaTeX can find IEEEtran.cls
+          const isIeee = preset.name?.includes('ieee') || args.preset?.includes('ieee');
+          let cwd: string | undefined;
+          if (isIeee && preset.resolved_template_path) {
+            cwd = preset.resolved_template_path.split("/").slice(0, -1).join("/");
+            // Use simple tables for IEEE compatibility
+            builder.simpleTables();
+          }
+          const result = await builder.execute(cwd);
           if (!result.success) throw new Error(`Failed:\n${result.error}`);
           return `Created: ${outputPath}\nPreset: ${preset.name}`;
         },
@@ -619,6 +627,8 @@ export const DocsPlugin: Plugin = async (ctx) => {
             .applyMetadata({ title: args.title, author: args.author, abstract: args.abstract, keywords: args.keywords });
           if (args.bibliography) builder.bibliography(args.bibliography);
           // Run from template directory so LaTeX can find IEEEtran.cls
+          // Use simple tables for IEEE compatibility
+          builder.simpleTables();
           const templateDir = preset.resolved_template_path.split("/").slice(0, -1).join("/");
           const result = await builder.execute(templateDir);
           if (!result.success) throw new Error(`Failed:\n${result.error}`);
