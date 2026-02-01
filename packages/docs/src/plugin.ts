@@ -397,7 +397,7 @@ export const DocsPlugin: Plugin = async (ctx) => {
         description: "Convert documents between formats using pandoc.",
         args: {
           input_path: tool.schema.string().describe("Absolute path to the input file"),
-          output_format: tool.schema.enum(["pdf", "docx", "markdown", "html", "latex"]).describe("Target format"),
+          output_format: tool.schema.enum(["pdf", "docx", "odt", "markdown", "html", "latex"]).describe("Target format"),
           from_format: tool.schema.string().optional().describe("Source format (auto-detected if omitted)"),
           output_dir: tool.schema.string().optional().describe("Directory to save output"),
         },
