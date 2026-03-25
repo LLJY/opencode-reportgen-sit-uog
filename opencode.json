@@ -65,9 +65,6 @@
         "bash": true,
         "webfetch": true,
         "websearch": true,
-        "search_research_articles": true,
-        "search_research_articles_advanced": true,
-        "get_researcher_info": true
       }
     },
     "code-checker": {
