@@ -26,6 +26,7 @@ This repository contains a fully-featured OpenCode-AI configuration designed for
 - **Context7** — Library documentation queries
 - **Brave Search** — Web search via Brave API
 - **DuckDuckGo Search** — Alternative web search
+- **[Researcher MCP](https://github.com/hoshinoht/researcher-mcp)** — Google Scholar search (submodule, requires `go build`)
 
 ### Document Generation Plugin
 
@@ -49,6 +50,7 @@ Custom TypeScript plugin for creating professional documents:
 │   └── explore.md          # File system navigator
 ├── plugins/                # OpenCode plugin source (TypeScript)
 │   └── docs.ts            # Document generation plugin
+├── researcher-mcp/         # Google Scholar MCP server (git submodule)
 ├── src/                    # Supporting modules
 ├── pandoc/                 # LaTeX templates and assets
 │   ├── assets/            # Logo images (SIT, UofG)
@@ -75,14 +77,20 @@ Custom TypeScript plugin for creating professional documents:
    npm install
    ```
 
-3. **Create `.env` with API keys:**
+3. **Build the researcher-mcp submodule** (requires Go):
+   ```bash
+   git submodule update --init --recursive
+   cd researcher-mcp && go build -o bin/researcher-mcp ./cmd/google-scholar-mcp/
+   ```
+
+4. **Create `.env` with API keys:**
    ```bash
    GITHUB_PAT=your_github_pat
    BRAVE_API_KEY=your_brave_key
    CONTEXT7_API_KEY=your_context7_key
    ```
 
-4. **Install LaTeX** (for document generation):
+5. **Install LaTeX** (for document generation):
    ```bash
    # Ubuntu/Debian
    sudo apt install texlive-full
@@ -127,6 +135,7 @@ Available tools when working with documents:
 - `opencode.json` uses `{env:VAR}` syntax for secrets — safe to commit
 - Agent prompts in `agents/` are referenced via `{file:path}` syntax
 - Actual API keys should be in `.env` (gitignored)
+- The `researcher-mcp` command uses `sh -c "$HOME/..."` for portability — it assumes the config is deployed to `~/.config/opencode/`
 
 ## Requirements
 

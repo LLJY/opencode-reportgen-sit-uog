@@ -180,7 +180,11 @@
     },
     "brave-search": {
       "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-brave-search"],
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
       "environment": {
         "BRAVE_API_KEY": "{env:BRAVE_API_KEY}"
       },
@@ -188,13 +192,19 @@
     },
     "ddg-search": {
       "type": "local",
-      "command": ["npx", "-y", "@oevortex/ddg_search@latest"],
+      "command": [
+        "npx",
+        "-y",
+        "@oevortex/ddg_search@latest"
+      ],
       "enabled": true
     },
     "researcher-mcp": {
       "type": "local",
       "command": [
-        "./researcher-mcp/bin/google-scholar-mcp"
+        "sh",
+        "-c",
+        "$HOME/.config/opencode/mcps/researcher-mcp/bin/researcher-mcp"
       ],
       "enabled": true
     }
