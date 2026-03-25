@@ -19,9 +19,8 @@
         "bash": true,
         "websearch": true,
         "webfetch": true,
-        "search_research_articles": true,
-        "search_research_articles_advanced": true,
-        "get_researcher_info": true
+        "write": false,
+        "edit": false
       }
     },
     "build": {
@@ -30,7 +29,17 @@
       "model": "anthropic/claude-opus-4-5",
       "variant": "max",
       "prompt": "{file:prompts/builder-prompt.md}",
-      "temperature": 1.0
+      "temperature": 1.0,
+      "tools": {
+        "read": true,
+        "write": true,
+        "edit": true,
+        "glob": true,
+        "grep": true,
+        "bash": true,
+        "websearch": true,
+        "webfetch": true
+      }
     },
     "explore": {
       "description": "Fast file system navigator. Locates files, logs, configs, or code relevant to tasks.",
@@ -40,13 +49,14 @@
       "prompt": "{file:agents/explore.md}",
       "temperature": 1.0,
       "tools": {
-        "bash": true,
         "read": true,
         "glob": true,
         "grep": true,
-        "webfetch": true,
+        "bash": true,
         "write": false,
-        "edit": false
+        "edit": false,
+        "websearch": false,
+        "webfetch": false
       }
     },
     "docs-first-coder": {
@@ -64,7 +74,7 @@
         "grep": true,
         "bash": true,
         "webfetch": true,
-        "websearch": true,
+        "websearch": true
       }
     },
     "code-checker": {
@@ -79,10 +89,10 @@
         "glob": true,
         "grep": true,
         "bash": true,
-        "webfetch": true,
-        "websearch": true,
         "write": false,
-        "edit": false
+        "edit": false,
+        "websearch": false,
+        "webfetch": false
       }
     },
     "esp32-tdd-coder": {
@@ -99,8 +109,8 @@
         "glob": true,
         "grep": true,
         "bash": true,
-        "webfetch": true,
-        "websearch": true
+        "websearch": false,
+        "webfetch": false
       }
     },
     "esp32-tdd-test-writer": {
@@ -117,8 +127,8 @@
         "glob": true,
         "grep": true,
         "bash": true,
-        "webfetch": true,
-        "websearch": true
+        "websearch": false,
+        "webfetch": false
       }
     },
     "document-writer": {
@@ -146,10 +156,25 @@
         "docs_create_school_report": true,
         "docs_create_styled_pdf": true,
         "webfetch": false,
-        "websearch": false,
-        "search_research_articles": true,
-        "search_research_articles_advanced": true,
-        "get_researcher_info": true
+        "websearch": false
+      }
+    },
+    "document-proofreader": {
+      "description": "Academic proofreader. Reviews documents for writing quality, evidence gaps, and logical issues. Read-only.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-5",
+      "variant": "max",
+      "prompt": "{file:agents/document-proofreader.md}",
+      "temperature": 1.0,
+      "tools": {
+        "read": true,
+        "glob": true,
+        "grep": true,
+        "bash": true,
+        "websearch": true,
+        "webfetch": true,
+        "write": false,
+        "edit": false
       }
     }
   },

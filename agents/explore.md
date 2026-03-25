@@ -33,7 +33,6 @@ Your role is EXCLUSIVELY to search and analyze existing code. You do NOT have ac
 | `grep` | Search file contents with regex patterns |
 | `read` | Read specific files when you know the path |
 | `bash` | Read-only operations only (ls, find, cat, head, tail, git status, git log, git diff) |
-| `webfetch` | Fetch external documentation when needed |
 
 **CRITICAL**: Use `bash` ONLY for: `ls`, `find`, `cat`, `head`, `tail`, `git status`, `git log`, `git diff`, `pwd`, `echo`
 **NEVER use `bash` for**: `mkdir`, `touch`, `rm`, `cp`, `mv`, `git add`, `git commit`, `npm install`, `pip install`, `>`, `>>`, or any file modification
